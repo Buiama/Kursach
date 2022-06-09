@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta name="author" content="Dima Buialo">
+  <meta charset="UTF-8"/>
+  <title>online</title>
+  <style type="text/css" media="screen">
+    #code { 
+         width: 100%;
+         float:left;
+         min-height:450px;
+         overflow: hidden;
+     }
+</style>
+</head>
+
+<body>
+  <button id="run" onclick='run();'>Run</button> 
+
+  <div id='code' name="code">    #include &lt;iomanip&gt;
+    #include &lt;iostream&gt;
+    using namespace std;
+    int main()
+    {
+      cout << "Write your code here" << endl;
+    }
+  </div>
+  <p>Output:</p><pre id="output">Press run to compile</pre>
+
+  <script src="assets/js/jquery.min.js"></script> <!-- подключаем jquery -->
+  <script src="assets/js/ace/ace.js"></script> <!-- подключаем асик -->
+
+  <script>
+    var editor = ace.edit("code");
+    editor.setTheme("ace/theme/textmate");
+    editor.getSession().setMode("ace/mode/c_cpp");
+    editor.setShowPrintMargin(false);
+    editor.setOptions({
+      maxLines: Infinity,
+      fontSize:"12pt",
+    });
+    editor.$blockScrolling=Infinity;
+    var d = editor.getValue();
+</script>
+<script>
+    function run() {
+      var i = editor.getValue();
+    // Команда для компиляции на удаленном сервере
+    let cmd = "g++ -Wall main.cpp -o main_prog && echo 'Compilation: SUCCESS."
+        + " Program output is:\n' && ./main_prog && echo \"\nExit code: $?\"";
+
+    var output = $("#output");
+    output.text('Compiling...');
+    var to_compile = {
+        "src": i,
+        "cmd": cmd,
+    };
+
+    output.text("Executing... Please wait.");
+
+    $.ajax({
+        url: "http://coliru.stacked-crooked.com/compile",
+        type: "POST",
+        data: JSON.stringify(to_compile),
+        contentType:"text/plain; charset=utf-8",
+        dataType: "text"
+    }).done(function(data) {
+        output.text(data);
+    }).fail(function(data) {
+        output.text("Server error: " + data);
+    });
+};
+  </script>
+  
+</body>
+</html>
