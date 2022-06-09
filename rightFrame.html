@@ -15,7 +15,7 @@
 </head>
 
 <body>
-  <button id="run" onclick='run();'>Run1</button> 
+  <button id="run" onclick='run();'>Run</button> 
 
   <div id='code' name="code">    #include &lt;iomanip&gt;
     #include &lt;iostream&gt;
@@ -31,7 +31,6 @@
   <script src="assets/js/ace/ace.js"></script> <!-- подключаем асик -->
 
   <script>
-    alert("Why?");
     var editor = ace.edit("code");
     editor.setTheme("ace/theme/textmate");
     editor.getSession().setMode("ace/mode/c_cpp");
